@@ -1,5 +1,9 @@
-function App() {
-  return <h1>This is book catalog frontend</h1>;
-}
+import MainLayout from "./layouts/MainLayout";
 
-export default App;
+export default function App() {
+  return (
+    <>
+      <MainLayout />
+    </>
+  );
+}
