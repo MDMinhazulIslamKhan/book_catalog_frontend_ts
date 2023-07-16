@@ -4,12 +4,12 @@ import Footer from "./Footer";
 
 export default function MainLayout() {
   return (
-    <div>
+    <>
       <Navbar />
-      <div className="pt-8">
+      <div className="py-8">
         <Outlet />
       </div>
       <Footer />
-    </div>
+    </>
   );
 }

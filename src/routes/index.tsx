@@ -4,6 +4,7 @@ import App from "../App";
 import Login from "../page/Login";
 import Registration from "../page/Registration";
 import NotFound from "../page/NotFound";
+import About from "../page/About";
 
 const routes = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const routes = createBrowserRouter([
       {
         path: "/registration",
         element: <Registration />,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
     ],
   },

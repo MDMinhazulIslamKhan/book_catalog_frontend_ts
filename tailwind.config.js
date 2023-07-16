@@ -4,5 +4,19 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  daisyui: {
+    themes: [
+      {
+        myThemes: {
+          primary: "#762c87",
+          secondary: "#e797fa",
+          accent: "#fbebff",
+          "base-100": "#ffffff",
+        },
+      },
+      "dark",
+      "cupcake",
+    ],
+  },
+  plugins: [require("daisyui")],
 };
