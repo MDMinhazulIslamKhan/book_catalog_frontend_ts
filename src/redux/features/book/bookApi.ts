@@ -17,8 +17,7 @@ const bookApi = api.injectEndpoints({
       query: ({ id, data }) => ({
         url: `/book/review/${id}`,
         method: "POST",
-        headers: data.token,
-        body: data.review,
+        body: data,
       }),
       invalidatesTags: ["review"],
     }),

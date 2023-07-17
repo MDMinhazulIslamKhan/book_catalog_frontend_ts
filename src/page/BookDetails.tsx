@@ -1,13 +1,34 @@
 import { useParams } from "react-router-dom";
-import { useSingleBookQuery } from "../redux/features/book/bookApi";
+import {
+  usePostReviewMutation,
+  useSingleBookQuery,
+} from "../redux/features/book/bookApi";
+import { useAppSelector } from "../redux/hook";
 
 const BookDetails = () => {
   const { id } = useParams();
+  const [postReview, options] = usePostReviewMutation();
+  const { token } = useAppSelector((state) => state.user);
+  const { error, isLoading, isSuccess, data: postReviewData } = options;
+  console.log(error, isLoading, isSuccess, postReviewData);
 
   const { data } = useSingleBookQuery(id);
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target.review.value);
+    const review = e.target.review.value;
+    const confirmation = window.confirm("Are you sure to add comment.");
+    let shoeMassage;
+    if (!confirmation) {
+      shoeMassage = "Review canceled";
+      return shoeMassage;
+    }
+
+    const option = {
+      id,
+      data: { review },
+    };
+
+    postReview(option);
     e.target.review.value = "";
   };
   return (
@@ -41,13 +62,15 @@ const BookDetails = () => {
               type="text"
               placeholder="Your Review"
               name="review"
+              required
               className="input input-bordered w-full max-w-xs mt-5 mb-3"
             />
             <button
               type="submit"
               className="btn btn-outline btn-secondary btn-sm"
+              disabled={!token}
             >
-              Submit
+              {token ? "SUBMIT" : "Please Login to post a review"}
             </button>
           </form>
         </div>
