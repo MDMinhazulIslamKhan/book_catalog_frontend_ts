@@ -18,19 +18,19 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex-1">
-        <h1 className="font-extrabold text-primary sm:text-4xl text-lg -ms-5">
+        <h1 className="font-extrabold text-primary sm:text-4xl text-xl sm:-ms-5">
           <Link to="/">Book library</Link>
         </h1>
       </div>
       <div className="flex-col-reverse">
         {token ? (
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal mr-8">
             <li>
               <details>
                 <summary>Your info</summary>
                 <ul className="p-2 bg-accent border-primary border-2 z-10">
                   <li>
-                    <a>Link 1</a>
+                    <Link to="/add-book">Add new book</Link>
                   </li>
                   <li>
                     <a onClick={() => handleLogout()}>Logout</a>

@@ -34,7 +34,6 @@ const BookDetails = () => {
     postReview(option);
 
     e.target.review.value = "";
-    window.alert("Review post successfully");
   };
   return (
     <div className="w-full">
@@ -67,6 +66,7 @@ const BookDetails = () => {
               type="text"
               placeholder="Your Review"
               name="review"
+              autoComplete="off"
               required
               className="input input-bordered w-full max-w-xs mt-5 mb-3"
             />

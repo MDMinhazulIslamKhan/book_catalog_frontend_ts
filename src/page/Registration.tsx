@@ -1,13 +1,20 @@
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRegistrationMutation } from "../redux/features/user/userApi";
-import { useAppDispatch } from "../redux/hook";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { setToken } from "../redux/features/user/userSlice";
 
 const Registration = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const { token } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   let from = location.state?.from?.pathname || "/";
 
@@ -50,6 +57,7 @@ const Registration = () => {
               <input
                 name="firstName"
                 placeholder="First Name"
+                autoComplete="off"
                 required
                 className="input input-bordered w-full max-w-xs"
               />
@@ -61,6 +69,7 @@ const Registration = () => {
               <input
                 name="lastName"
                 placeholder="Last Name"
+                autoComplete="off"
                 required
                 className="input input-bordered w-full max-w-xs"
               />
@@ -72,6 +81,7 @@ const Registration = () => {
               <input
                 name="email"
                 placeholder="Your Email"
+                autoComplete="off"
                 required
                 className="input input-bordered w-full max-w-xs"
               />
@@ -84,6 +94,7 @@ const Registration = () => {
                 type="password"
                 name="password"
                 placeholder="Your Password"
+                required
                 className="input input-bordered w-full max-w-xs"
               />
             </div>

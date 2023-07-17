@@ -6,8 +6,19 @@ import { api } from "../../api/apiSlice";
 const bookApi = api.injectEndpoints({
   endpoints: (build) => ({
     getAllBooks: build.query({
-      query: ({ page, limit, sortBy, sortOrder, searchTerm, search, other }) =>
-        `/book/get-all-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${searchTerm}&${search}=${other}`,
+      query: ({
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+        searchTerm,
+        exactSearch,
+        matchSearch,
+      }) =>
+        `/book/get-all-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
+    }),
+    getGenre: build.query({
+      query: () => `/genre`,
     }),
     singleBook: build.query({
       query: (id) => `/book/get-single-book/${id}`,
@@ -21,6 +32,13 @@ const bookApi = api.injectEndpoints({
       }),
       invalidatesTags: ["review"],
     }),
+    postBook: build.mutation({
+      query: (data) => ({
+        url: `/book/add-book`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -28,4 +46,6 @@ export const {
   useGetAllBooksQuery,
   useSingleBookQuery,
   usePostReviewMutation,
+  useGetGenreQuery,
+  usePostBookMutation,
 } = bookApi;

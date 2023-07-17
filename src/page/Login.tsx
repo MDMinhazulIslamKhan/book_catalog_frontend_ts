@@ -1,13 +1,20 @@
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/user/userApi";
-import { useAppDispatch } from "../redux/hook";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { setToken } from "../redux/features/user/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const { token } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [navigate, token]);
 
   let from = location.state?.from?.pathname || "/";
 
@@ -47,6 +54,8 @@ const Login = () => {
               </label>
               <input
                 name="email"
+                autoComplete="off"
+                required
                 placeholder="Your Email"
                 className="input input-bordered w-full max-w-xs"
               />
