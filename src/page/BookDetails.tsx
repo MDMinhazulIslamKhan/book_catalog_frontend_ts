@@ -9,18 +9,21 @@ const BookDetails = () => {
   const { id } = useParams();
   const [postReview, options] = usePostReviewMutation();
   const { token } = useAppSelector((state) => state.user);
-  const { error, isLoading, isSuccess, data: postReviewData } = options;
-  console.log(error, isLoading, isSuccess, postReviewData);
+  const { isSuccess } = options;
 
-  const { data } = useSingleBookQuery(id);
+  const { data } = useSingleBookQuery(id, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 10000,
+  });
   const handleReviewSubmit = (e) => {
     e.preventDefault();
     const review = e.target.review.value;
     const confirmation = window.confirm("Are you sure to add comment.");
-    let shoeMassage;
+    let showMessage;
     if (!confirmation) {
-      shoeMassage = "Review canceled";
-      return shoeMassage;
+      showMessage = "Review canceled";
+      e.target.review.value = "";
+      return showMessage;
     }
 
     const option = {
@@ -29,7 +32,9 @@ const BookDetails = () => {
     };
 
     postReview(option);
+
     e.target.review.value = "";
+    window.alert("Review post successfully");
   };
   return (
     <div className="w-full">
@@ -49,14 +54,14 @@ const BookDetails = () => {
           <h2 className="card-title text-primary font-extrabold text-2xl">
             Book Reviews
           </h2>
-          {data?.data?.reviews.map((review) => (
-            <p className="text-primary">
-              <span className="font-bold">Name: </span>
-              {review.name}
-              <span className="font-bold"> ; Review: </span>
-              {review.review}
-            </p>
-          ))}
+          <div className="w-full grid md:grid-cols-4 sm:grid-cols-2 gap-4">
+            {data?.data?.reviews.map((review) => (
+              <p className="text-primary">
+                <span className="font-bold">{review.name}: </span>
+                <span className="text-slate-700"> {review.review}</span>
+              </p>
+            ))}
+          </div>
           <form onSubmit={handleReviewSubmit}>
             <input
               type="text"
