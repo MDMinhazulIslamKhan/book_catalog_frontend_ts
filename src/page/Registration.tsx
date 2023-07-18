@@ -6,7 +6,6 @@ import { setToken } from "../redux/features/user/userSlice";
 
 const Registration = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.user);
 
@@ -15,8 +14,6 @@ const Registration = () => {
       navigate("/");
     }
   }, [navigate, token]);
-
-  let from = location.state?.from?.pathname || "/";
 
   let errorMassage;
   const [postLogin, options] = useRegistrationMutation();
@@ -32,7 +29,7 @@ const Registration = () => {
   if (isSuccess) {
     localStorage.setItem("accessToken", data?.data?.token);
     dispatch(setToken(data?.data?.token));
-    navigate(from, { replace: true });
+    navigate("/");
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

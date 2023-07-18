@@ -18,7 +18,37 @@ const bookApi = api.injectEndpoints({
         body: data,
       }),
     }),
+    addWishlist: build.mutation({
+      query: (id) => ({
+        url: `/user/add-book-into-wishlist/${id}`,
+        method: "POST",
+      }),
+    }),
+    addBooklist: build.mutation({
+      query: ({ id, data }) => ({
+        url: `/user/add-book-into-booklist/${id}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateBooklist: build.mutation({
+      query: ({ id, data }) => ({
+        url: `/user/update-booklist/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    profile: build.query({
+      query: () => `/user`,
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegistrationMutation } = bookApi;
+export const {
+  useLoginMutation,
+  useRegistrationMutation,
+  useProfileQuery,
+  useAddWishlistMutation,
+  useAddBooklistMutation,
+  useUpdateBooklistMutation,
+} = bookApi;

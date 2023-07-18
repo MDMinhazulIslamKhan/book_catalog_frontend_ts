@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
   useGetGenreQuery,
@@ -6,11 +6,14 @@ import {
 } from "../redux/features/book/bookApi";
 
 const AddBook = () => {
+  const navigate = useNavigate();
   const { data } = useGetGenreQuery(undefined);
   const [genre, setGenre] = useState(null);
   const [postBook, options] = usePostBookMutation();
   const { isSuccess, error } = options;
-  console.log(error, isSuccess);
+  if (isSuccess) {
+    navigate("/");
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

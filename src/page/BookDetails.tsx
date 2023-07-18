@@ -15,6 +15,7 @@ const BookDetails = () => {
     refetchOnMountOrArgChange: true,
     pollingInterval: 10000,
   });
+
   const handleReviewSubmit = (e) => {
     e.preventDefault();
     const review = e.target.review.value;

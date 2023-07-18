@@ -2,20 +2,24 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className=" footer footer-center p-10 text-primary bg-accent max-h-30 rounded">
+    <footer
+      className="
+     footer footer-center p-10 text-primary bg-accent max-h-30 rounded"
+    >
       <div className="grid grid-flow-col gap-3">
         <Link to="/about" className="link link-hover">
           About us
         </Link>
         <a
           href="mailto:minhazulislamkhan@gmail.com"
+          target="_blank"
           className="link link-hover"
         >
           Email
         </a>
-        <a href="tel:+8801521438469" className="link link-hover">
+        <Link to="/about" className="link link-hover">
           Contact
-        </a>
+        </Link>
         <Link to="/about" className="link link-hover">
           Jobs
         </Link>

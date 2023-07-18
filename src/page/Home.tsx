@@ -10,22 +10,25 @@ import {
 const Home = () => {
   const [pageNo, setPageNo] = useState(1);
   const [genre, setGenre] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("createdAt");
   const [limit, setLimit] = useState(5);
   const [matchSearch, setMatchSearch] = useState("");
   const { data } = useGetGenreQuery(undefined);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: bookData } = useGetAllBooksQuery({
-    page: pageNo,
-    limit,
-    sortBy,
-    sortOrder,
-    searchTerm: genre ? "genre" : "",
-    exactSearch: genre,
-    matchSearch: matchSearch,
-  });
+  const { data: bookData } = useGetAllBooksQuery(
+    {
+      page: pageNo,
+      limit,
+      sortBy,
+      sortOrder,
+      searchTerm: genre ? "genre" : "",
+      exactSearch: genre,
+      matchSearch: matchSearch,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
   const page = bookData?.data?.meta?.page;
   const totalPage = Math.ceil(
     bookData?.data?.meta?.count / bookData?.data?.meta?.limit
@@ -52,10 +55,7 @@ const Home = () => {
           className="select select-bordered select-xs w-32 select-secondary ml-5 max-w-xs"
           onChange={(e) => setGenre(e.target.value)}
         >
-          <option disabled selected className="bg-accent">
-            Select Genre
-          </option>
-          <option className="bg-accent" value="">
+          <option selected className="bg-accent" value="">
             All genre
           </option>
           {data?.data?.map((genre) => (
@@ -75,7 +75,7 @@ const Home = () => {
             Sort By
           </option>
           <option className="bg-accent" value="title">
-            Title
+            Book Title
           </option>
           <option className="bg-accent" value="author">
             Author name

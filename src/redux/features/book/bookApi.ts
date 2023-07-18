@@ -17,6 +17,18 @@ const bookApi = api.injectEndpoints({
       }) =>
         `/book/get-all-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
     }),
+    getOwnBooks: build.query({
+      query: ({
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+        searchTerm,
+        exactSearch,
+        matchSearch,
+      }) =>
+        `/book/get-own-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
+    }),
     getGenre: build.query({
       query: () => `/genre`,
     }),
@@ -39,13 +51,29 @@ const bookApi = api.injectEndpoints({
         body: data,
       }),
     }),
+    updateBook: build.mutation({
+      query: ({ id, data }) => ({
+        url: `/book/update-book/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    deleteBook: build.mutation({
+      query: (id) => ({
+        url: `/book/delete-book/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetAllBooksQuery,
+  useGetOwnBooksQuery,
   useSingleBookQuery,
   usePostReviewMutation,
   useGetGenreQuery,
   usePostBookMutation,
+  useUpdateBookMutation,
+  useDeleteBookMutation,
 } = bookApi;

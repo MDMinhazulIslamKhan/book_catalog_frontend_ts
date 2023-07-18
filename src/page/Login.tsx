@@ -1,12 +1,11 @@
 import { FormEvent, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/user/userApi";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { setToken } from "../redux/features/user/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.user);
 
@@ -15,8 +14,6 @@ const Login = () => {
       navigate("/");
     }
   }, [navigate, token]);
-
-  let from = location.state?.from?.pathname || "/";
 
   let errorMassage;
   const [postLogin, options] = useLoginMutation();
@@ -32,7 +29,7 @@ const Login = () => {
   if (isSuccess) {
     localStorage.setItem("accessToken", data?.data?.token);
     dispatch(setToken(data?.data?.token));
-    navigate(from, { replace: true });
+    navigate("/");
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
