@@ -28,6 +28,7 @@ const bookApi = api.injectEndpoints({
         matchSearch,
       }) =>
         `/book/get-own-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
+      providesTags: ["book"],
     }),
     getGenre: build.query({
       query: () => `/genre`,
@@ -63,6 +64,7 @@ const bookApi = api.injectEndpoints({
         url: `/book/delete-book/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["book"],
     }),
   }),
 });

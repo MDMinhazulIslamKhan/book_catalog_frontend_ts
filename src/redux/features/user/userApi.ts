@@ -37,9 +37,11 @@ const bookApi = api.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
+      invalidatesTags: ["book"],
     }),
     profile: build.query({
       query: () => `/user`,
+      providesTags: ["book"],
     }),
   }),
 });

@@ -1,37 +1,52 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetGenreQuery,
-  usePostBookMutation,
+  useSingleBookQuery,
+  useUpdateBookMutation,
 } from "../redux/features/book/bookApi";
 
-const AddBook = () => {
+const EditBook = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { data: previousData } = useSingleBookQuery(id, {
+    refetchOnMountOrArgChange: true,
+  });
   const { data } = useGetGenreQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const [genre, setGenre] = useState(null);
-  const [postBook, options] = usePostBookMutation();
-  const { isSuccess, error } = options;
-  if (isSuccess) {
-    navigate("/");
-  }
+  const [updateBook, options] = useUpdateBookMutation();
+  const { isSuccess } = options;
+
+  const [genre, setGenre] = useState("");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [publicationDate, setPublicationDate] = useState(null);
+
+  useEffect(() => {
+    setGenre(previousData?.data?.genre);
+    setTitle(previousData?.data?.title);
+    setAuthor(previousData?.data?.author);
+    const date = new Date(previousData?.data?.publicationDate);
+    const year = date?.getFullYear();
+    const month = String(date?.getMonth()).padStart(2, "0");
+    const day = String(date?.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    setPublicationDate(formattedDate);
+  }, [previousData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const title = e?.target?.title?.value;
-    const author = e?.target?.author?.value;
-    const publicationDate = e?.target?.publicationDate?.value;
-    const option = { title, author, genre, publicationDate };
-
-    postBook(option);
+    const option = { id, data: { title, author, genre, publicationDate } };
+    updateBook(option);
+    isSuccess && navigate("/my-book");
   };
 
   return (
     <div className="flex justify-center my-8">
       <div className="card w-full max-w-sm shadow-2xl bg-base-100">
         <div className="card-body">
-          <h2 className="text-center font-bold text-2xl my-3">Add new book</h2>
+          <h2 className="text-center font-bold text-2xl my-3">Edit book</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-control w-full max-w-xs">
               <label className="label">
@@ -42,6 +57,8 @@ const AddBook = () => {
                 autoComplete="off"
                 placeholder="Book Title"
                 required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="input input-bordered w-full max-w-xs"
               />
             </div>
@@ -54,6 +71,8 @@ const AddBook = () => {
                 autoComplete="off"
                 placeholder="Book Author"
                 required
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
                 className="input input-bordered w-full max-w-xs"
               />
             </div>
@@ -64,11 +83,9 @@ const AddBook = () => {
               <select
                 name="genre"
                 className="select select-bordered w-full max-w-xs"
+                value={genre}
                 onChange={(e) => setGenre(e.target.value)}
               >
-                <option disabled selected>
-                  Select Genre
-                </option>
                 {data?.data?.map((genre) => (
                   <option className="bg-accent" value={genre.genre}>
                     {genre.genre}
@@ -85,7 +102,9 @@ const AddBook = () => {
                 autoComplete="off"
                 placeholder="Publication Date"
                 type="date"
+                value={publicationDate}
                 required
+                onChange={(e) => setPublicationDate(e.target.value)}
                 className="input input-bordered w-full max-w-xs"
               />
             </div>
@@ -93,10 +112,10 @@ const AddBook = () => {
               <p className="text-red-600 my-2 text-center"></p>
               <button
                 type="submit"
+                disabled={!previousData}
                 className="btn btn-secondary disabled:btn-accent text-white font-bold"
-                disabled={!genre}
               >
-                {genre ? "Add" : "Select a genre"}
+                Edit Book
               </button>
             </div>
           </form>
@@ -106,4 +125,4 @@ const AddBook = () => {
   );
 };
 
-export default AddBook;
+export default EditBook;

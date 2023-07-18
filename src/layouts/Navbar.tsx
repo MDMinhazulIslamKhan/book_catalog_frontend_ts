@@ -30,7 +30,16 @@ const Navbar = () => {
                 <summary>Your info</summary>
                 <ul className="p-2 bg-accent border-primary border-2 z-10">
                   <li>
-                    <Link to="/add-book">Add new book</Link>
+                    <Link to="/">All Book's</Link>
+                  </li>
+                  <li>
+                    <Link to="/my-book">My Book's</Link>
+                  </li>
+                  <li>
+                    <Link to="/add-book">Add New Book</Link>
+                  </li>
+                  <li>
+                    <Link to="/my-profile">My Profile</Link>
                   </li>
                   <li>
                     <a onClick={() => handleLogout()}>Logout</a>

@@ -1,20 +1,49 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   usePostReviewMutation,
   useSingleBookQuery,
 } from "../redux/features/book/bookApi";
 import { useAppSelector } from "../redux/hook";
+import {
+  useAddBooklistMutation,
+  useAddWishlistMutation,
+} from "../redux/features/user/userApi";
 
 const BookDetails = () => {
   const { id } = useParams();
-  const [postReview, options] = usePostReviewMutation();
+  const navigate = useNavigate();
+  const [postReview] = usePostReviewMutation();
+  const [addInBooklist, booklistOptions] = useAddBooklistMutation();
+  const [addInWishlist, error] = useAddWishlistMutation();
+
   const { token } = useAppSelector((state) => state.user);
-  const { isSuccess } = options;
+  const { isError: booklistError } = booklistOptions;
+  if (booklistError || error.error) {
+    window.alert("Book is already added.");
+    navigate("/my-profile");
+  }
 
   const { data } = useSingleBookQuery(id, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 10000,
   });
+
+  const setStatus = (status) => {
+    const option = { id, data: { status } };
+    const confirm = window.confirm("Are you sure?");
+    if (!confirm) {
+      return;
+    }
+    addInBooklist(option);
+  };
+
+  const addWishlist = () => {
+    const confirm = window.confirm("Are you sure?");
+    if (!confirm) {
+      return;
+    }
+    addInWishlist(id);
+  };
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +67,7 @@ const BookDetails = () => {
   };
   return (
     <div className="w-full">
-      <div className="card w-2/3 bg-accent text-neutral-content mx-auto">
+      <div className="card w-2/3 bg-purple-50 text-neutral-content mx-auto">
         <div className="card-body items-center text-center">
           <h2 className="card-title text-primary font-extrabold text-2xl">
             {data?.data?.title}
@@ -51,6 +80,45 @@ const BookDetails = () => {
             Publication Date:{" "}
             {new Date(data?.data?.publicationDate).toLocaleDateString()}
           </p>
+          <div className="flex gap-2">
+            <div className="dropdown">
+              <label tabIndex={0} className="btn btn-sm btn-secondary">
+                Add into booklist
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-accent rounded-box"
+              >
+                <li>
+                  <p
+                    className="text-primary"
+                    onClick={() => setStatus("Read soon")}
+                  >
+                    Read soon
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="text-primary"
+                    onClick={() => setStatus("Currently reading")}
+                  >
+                    Currently reading
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="text-primary"
+                    onClick={() => setStatus("Finished reading")}
+                  >
+                    Finished reading
+                  </p>
+                </li>
+              </ul>
+            </div>
+            <button onClick={addWishlist} className="btn btn-sm btn-secondary">
+              Add into wishlist
+            </button>
+          </div>
           <h2 className="card-title text-primary font-extrabold text-2xl">
             Book Reviews
           </h2>
