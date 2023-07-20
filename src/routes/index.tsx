@@ -9,8 +9,8 @@ import BookDetails from "../page/BookDetails";
 import AddBook from "../page/AddBook";
 import OwnBook from "../page/OwnBook";
 import EditBook from "../page/EditBook";
-import PrivateRoute from "./Privateroute";
 import Profile from "../page/Profile";
+import PrivateRoute from "./PrivateRoute";
 
 const routes = createBrowserRouter([
   {
