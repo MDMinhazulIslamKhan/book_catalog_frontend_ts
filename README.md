@@ -33,3 +33,15 @@
 - cors
 
 ---
+
+## Login Info
+
+- email : abc@gmail.com
+
+- password : 12345
+
+---
+
+---
+
+---
