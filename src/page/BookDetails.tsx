@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useNavigate, useParams } from "react-router-dom";
 import {
   usePostReviewMutation,
@@ -28,7 +33,7 @@ const BookDetails = () => {
     pollingInterval: 10000,
   });
 
-  const setStatus = (status) => {
+  const setStatus = (status: string) => {
     const option = { id, data: { status } };
     const confirm = window.confirm("Are you sure?");
     if (!confirm) {
@@ -45,7 +50,10 @@ const BookDetails = () => {
     addInWishlist(id);
   };
 
-  const handleReviewSubmit = (e) => {
+  const handleReviewSubmit = (e: {
+    preventDefault: () => void;
+    target: { review: { value: string } };
+  }) => {
     e.preventDefault();
     const review = e.target.review.value;
     const confirmation = window.confirm("Are you sure to add comment.");
@@ -82,9 +90,13 @@ const BookDetails = () => {
           </p>
           <div className="flex gap-2">
             <div className="dropdown">
-              <label tabIndex={0} className="btn btn-sm btn-secondary">
+              <button
+                tabIndex={0}
+                disabled={!token}
+                className="btn btn-sm btn-secondary disabled:btn-accent"
+              >
                 Add into booklist
-              </label>
+              </button>
               <ul
                 tabIndex={0}
                 className="dropdown-content z-[1] menu p-2 shadow bg-accent rounded-box"
@@ -115,7 +127,11 @@ const BookDetails = () => {
                 </li>
               </ul>
             </div>
-            <button onClick={addWishlist} className="btn btn-sm btn-secondary">
+            <button
+              onClick={addWishlist}
+              disabled={!token}
+              className="btn btn-sm disabled:btn-accent btn-secondary"
+            >
               Add into wishlist
             </button>
           </div>
@@ -123,7 +139,7 @@ const BookDetails = () => {
             Book Reviews
           </h2>
           <div className="w-full grid md:grid-cols-4 sm:grid-cols-2 gap-4">
-            {data?.data?.reviews.map((review) => (
+            {data?.data?.reviews.map((review: any) => (
               <p className="text-primary">
                 <span className="font-bold">{review.name}: </span>
                 <span className="text-slate-700"> {review.review}</span>

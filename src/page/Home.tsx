@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Link } from "react-router-dom";
@@ -12,7 +15,7 @@ const Home = () => {
   const [genre, setGenre] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState("5");
   const [matchSearch, setMatchSearch] = useState("");
   const { data } = useGetGenreQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -60,7 +63,7 @@ const Home = () => {
           <option selected className="bg-accent" value="">
             All genre
           </option>
-          {data?.data?.map((genre) => (
+          {data?.data?.map((genre: any) => (
             <option className="bg-accent" value={genre.genre}>
               {genre.genre}
             </option>

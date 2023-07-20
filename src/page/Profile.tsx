@@ -1,4 +1,9 @@
-import { Link } from "react-router-dom";
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */ import { Link } from "react-router-dom";
 import {
   useProfileQuery,
   useUpdateBooklistMutation,
@@ -11,7 +16,7 @@ const Profile = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  const changeStatus = (id, status) => {
+  const changeStatus = (id: string, status: string) => {
     const option = { id, data: { status } };
     updateList(option);
     window.confirm("Are you sure?");
@@ -126,7 +131,7 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.data?.wishList?.map((book, index) => (
+                  {data?.data?.wishList?.map((book: any, index: number) => (
                     <tr>
                       <th>{index + 1}</th>
                       <td>

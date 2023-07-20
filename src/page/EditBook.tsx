@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -21,7 +26,7 @@ const EditBook = () => {
   const [genre, setGenre] = useState("");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [publicationDate, setPublicationDate] = useState(null);
+  const [publicationDate, setPublicationDate] = useState("");
 
   useEffect(() => {
     setGenre(previousData?.data?.genre);
@@ -35,7 +40,7 @@ const EditBook = () => {
     setPublicationDate(formattedDate);
   }, [previousData]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     const option = { id, data: { title, author, genre, publicationDate } };
     updateBook(option);
@@ -86,7 +91,7 @@ const EditBook = () => {
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
               >
-                {data?.data?.map((genre) => (
+                {data?.data?.map((genre: any) => (
                   <option className="bg-accent" value={genre.genre}>
                     {genre.genre}
                   </option>

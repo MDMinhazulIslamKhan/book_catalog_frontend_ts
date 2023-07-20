@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/user/userApi";
@@ -18,20 +23,14 @@ const Login = () => {
   let errorMassage;
   const [postLogin, options] = useLoginMutation();
 
-  const { error, isLoading, isSuccess, data } = options;
-  errorMassage = error?.data?.message;
+  const { isSuccess, data } = options;
 
-  if (isLoading) {
-    errorMassage = (
-      <span className="loading loading-spinner text-primary"></span>
-    );
-  }
   if (isSuccess) {
     localStorage.setItem("accessToken", data?.data?.token);
     dispatch(setToken(data?.data?.token));
     navigate("/");
   }
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     const email = e?.target?.email?.value;
     const password = e?.target?.password?.value;

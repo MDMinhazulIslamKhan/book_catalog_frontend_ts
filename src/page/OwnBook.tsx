@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -15,7 +19,7 @@ const OwnBook = () => {
   const [genre, setGenre] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState("5");
   const [matchSearch, setMatchSearch] = useState("");
   const { data } = useGetGenreQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -40,7 +44,7 @@ const OwnBook = () => {
   const totalPage = Math.ceil(
     bookData?.data?.meta?.count / bookData?.data?.meta?.limit
   );
-  const handleDelete = (id) => {
+  const handleDelete = (id: any) => {
     const confirmation = window.confirm("Are you sure to delete this book?");
     let showMessage;
     if (!confirmation) {
@@ -121,7 +125,7 @@ const OwnBook = () => {
           <option selected className="bg-accent" value="">
             All genre
           </option>
-          {data?.data?.map((genre) => (
+          {data?.data?.map((genre: any) => (
             <option className="bg-accent" value={genre.genre}>
               {genre.genre}
             </option>
