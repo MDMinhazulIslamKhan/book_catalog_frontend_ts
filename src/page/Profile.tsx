@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */ import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   useProfileQuery,
   useUpdateBooklistMutation,
 } from "../redux/features/user/userApi";
+import { IApiResponse } from "../types";
+import { IUser } from "../types/user";
 
 const Profile = () => {
-  const [updateList, options] = useUpdateBooklistMutation();
-  const { isSuccess } = options;
-  const { data } = useProfileQuery(undefined, {
+  const [updateList] = useUpdateBooklistMutation();
+  const { data }: { data?: IApiResponse<IUser> } = useProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -47,7 +43,7 @@ const Profile = () => {
                 </thead>
                 <tbody>
                   {data?.data?.bookList.map((book, index) => (
-                    <tr>
+                    <tr key={index}>
                       <th>{index + 1}</th>
                       <td>
                         {book.book.title} - {book.book.author}
@@ -131,8 +127,8 @@ const Profile = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.data?.wishList?.map((book: any, index: number) => (
-                    <tr>
+                  {data?.data?.wishList?.map((book, index) => (
+                    <tr key={index}>
                       <th>{index + 1}</th>
                       <td>
                         {book.book.title} - {book.book.author}

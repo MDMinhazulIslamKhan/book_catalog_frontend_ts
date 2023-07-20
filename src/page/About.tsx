@@ -2,7 +2,7 @@ const About = () => {
   return (
     <div className="card md:w-1/2 w-3/4 bg-accent mx-auto shadow-xl">
       <div className="card-body">
-        <h2 className="text-center text-3xl font-bold text-primary">
+        <h2 className="text-center text-3xl mt-8 font-bold text-primary">
           Md. Minhazul Islam Khan
         </h2>
         <h2 className="text-center text-lg font-bold text-primary">

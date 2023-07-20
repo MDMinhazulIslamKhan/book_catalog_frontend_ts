@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { useNavigate, useParams } from "react-router-dom";
+import { FormEvent } from "react";
+
 import {
   usePostReviewMutation,
   useSingleBookQuery,
@@ -13,9 +10,12 @@ import {
   useAddBooklistMutation,
   useAddWishlistMutation,
 } from "../redux/features/user/userApi";
+import { IApiResponse } from "../types";
+import { IBook } from "../types/book";
 
 const BookDetails = () => {
   const { id } = useParams();
+
   const navigate = useNavigate();
   const [postReview] = usePostReviewMutation();
   const [addInBooklist, booklistOptions] = useAddBooklistMutation();
@@ -28,13 +28,19 @@ const BookDetails = () => {
     navigate("/my-profile");
   }
 
-  const { data } = useSingleBookQuery(id, {
+  const { data }: { data?: IApiResponse<IBook> } = useSingleBookQuery(id!, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 10000,
   });
+  const publicationDate = data?.data?.publicationDate
+    ? new Date(data.data.publicationDate).toLocaleDateString()
+    : "N/A";
 
   const setStatus = (status: string) => {
-    const option = { id, data: { status } };
+    const option: { id: string; data: { status: string } } = {
+      id: id!,
+      data: { status },
+    };
     const confirm = window.confirm("Are you sure?");
     if (!confirm) {
       return;
@@ -47,31 +53,30 @@ const BookDetails = () => {
     if (!confirm) {
       return;
     }
-    addInWishlist(id);
+    addInWishlist(id!);
   };
 
-  const handleReviewSubmit = (e: {
-    preventDefault: () => void;
-    target: { review: { value: string } };
-  }) => {
-    e.preventDefault();
-    const review = e.target.review.value;
+  const handleReviewSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+
+    const review = form.review.value;
     const confirmation = window.confirm("Are you sure to add comment.");
     let showMessage;
     if (!confirmation) {
       showMessage = "Review canceled";
-      e.target.review.value = "";
+      form.review.value = "";
       return showMessage;
     }
 
-    const option = {
-      id,
+    const option: { id: string; data: { review: string } } = {
+      id: id!,
       data: { review },
     };
 
     postReview(option);
 
-    e.target.review.value = "";
+    form.review.value = "";
   };
   return (
     <div className="w-full">
@@ -84,10 +89,7 @@ const BookDetails = () => {
             Author: {data?.data?.author}
           </p>
           <p className="text-primary">Genre: {data?.data?.genre}</p>
-          <p className="text-secondary">
-            Publication Date:{" "}
-            {new Date(data?.data?.publicationDate).toLocaleDateString()}
-          </p>
+          <p className="text-secondary">Publication Date: {publicationDate}</p>
           <div className="flex gap-2">
             <div className="dropdown">
               <button
@@ -139,8 +141,8 @@ const BookDetails = () => {
             Book Reviews
           </h2>
           <div className="w-full grid md:grid-cols-4 sm:grid-cols-2 gap-4">
-            {data?.data?.reviews.map((review: any) => (
-              <p className="text-primary">
+            {data?.data?.reviews.map((review, index) => (
+              <p key={index} className="text-primary">
                 <span className="font-bold">{review.name}: </span>
                 <span className="text-slate-700"> {review.review}</span>
               </p>

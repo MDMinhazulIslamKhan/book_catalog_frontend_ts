@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { BookInputData, SearchData } from "../../../types";
 import { api } from "../../api/apiSlice";
 
 const bookApi = api.injectEndpoints({
@@ -14,7 +12,7 @@ const bookApi = api.injectEndpoints({
         searchTerm,
         exactSearch,
         matchSearch,
-      }) =>
+      }: SearchData) =>
         `/book/get-all-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
     }),
     getOwnBooks: build.query({
@@ -26,7 +24,7 @@ const bookApi = api.injectEndpoints({
         searchTerm,
         exactSearch,
         matchSearch,
-      }) =>
+      }: SearchData) =>
         `/book/get-own-books?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchTerm=${matchSearch}&${searchTerm}=${exactSearch}`,
       providesTags: ["book"],
     }),
@@ -34,11 +32,11 @@ const bookApi = api.injectEndpoints({
       query: () => `/genre`,
     }),
     singleBook: build.query({
-      query: (id) => `/book/get-single-book/${id}`,
+      query: (id: string) => `/book/get-single-book/${id}`,
       providesTags: ["review"],
     }),
     postReview: build.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data }: { id: string; data: { review: string } }) => ({
         url: `/book/review/${id}`,
         method: "POST",
         body: data,
@@ -46,21 +44,21 @@ const bookApi = api.injectEndpoints({
       invalidatesTags: ["review"],
     }),
     postBook: build.mutation({
-      query: (data) => ({
+      query: (data: BookInputData) => ({
         url: `/book/add-book`,
         method: "POST",
         body: data,
       }),
     }),
     updateBook: build.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data }: { id: string; data: BookInputData }) => ({
         url: `/book/update-book/${id}`,
         method: "PATCH",
         body: data,
       }),
     }),
     deleteBook: build.mutation({
-      query: (id) => ({
+      query: (id: string) => ({
         url: `/book/delete-book/${id}`,
         method: "DELETE",
       }),

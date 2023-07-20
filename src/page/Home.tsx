@@ -1,43 +1,42 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import {
   useGetAllBooksQuery,
   useGetGenreQuery,
 } from "../redux/features/book/bookApi";
+import { IApiResponse, IApiResponseWithPagination, SearchData } from "../types";
+import { IBook } from "../types/book";
 
 const Home = () => {
   const [pageNo, setPageNo] = useState(1);
   const [genre, setGenre] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [sortBy, setSortBy] = useState("createdAt");
-  const [limit, setLimit] = useState("5");
+  const [limit, setLimit] = useState("10");
   const [matchSearch, setMatchSearch] = useState("");
-  const { data } = useGetGenreQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { data }: { data?: IApiResponse<Array<{ genre: string }>> } =
+    useGetGenreQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data: bookData } = useGetAllBooksQuery(
-    {
-      page: pageNo,
-      limit,
-      sortBy,
-      sortOrder,
-      searchTerm: genre ? "genre" : "",
-      exactSearch: genre,
-      matchSearch: matchSearch,
-    },
-    { refetchOnMountOrArgChange: true }
-  );
+  const searchData: SearchData = {
+    page: pageNo,
+    limit,
+    sortBy,
+    sortOrder,
+    searchTerm: genre ? "genre" : "",
+    exactSearch: genre,
+    matchSearch: matchSearch,
+  };
+
+  const { data: bookData }: { data?: IApiResponseWithPagination<IBook[]> } =
+    useGetAllBooksQuery(searchData, { refetchOnMountOrArgChange: true });
+
   const page = bookData?.data?.meta?.page;
-  const totalPage = Math.ceil(
-    bookData?.data?.meta?.count / bookData?.data?.meta?.limit
-  );
+
+  const totalPage = bookData
+    ? Math.ceil(bookData.data.meta.count / bookData.data.meta.limit)
+    : 1;
 
   return (
     <div className="overflow-x-auto">
@@ -58,13 +57,14 @@ const Home = () => {
         <select
           name="genre"
           className="select select-bordered select-xs w-32 select-secondary ml-5 max-w-xs"
+          defaultValue=""
           onChange={(e) => setGenre(e.target.value)}
         >
-          <option selected className="bg-accent" value="">
+          <option className="bg-accent" value="">
             All genre
           </option>
-          {data?.data?.map((genre: any) => (
-            <option className="bg-accent" value={genre.genre}>
+          {data?.data?.map((genre, index) => (
+            <option key={index} className="bg-accent" value={genre.genre}>
               {genre.genre}
             </option>
           ))}
@@ -74,9 +74,10 @@ const Home = () => {
         <select
           name="genre"
           className="select select-bordered select-xs w-28 select-secondary ml-5 max-w-xs"
+          defaultValue="createdAt"
           onChange={(e) => setSortBy(e.target.value)}
         >
-          <option disabled selected className="bg-accent">
+          <option value="createdAt" className="bg-accent">
             Sort By
           </option>
           <option className="bg-accent" value="title">
@@ -92,9 +93,10 @@ const Home = () => {
         <select
           name="genre"
           className="select select-bordered select-xs w-28 select-secondary ml-5 max-w-xs"
+          defaultValue={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
         >
-          <option disabled selected className="bg-accent">
+          <option className="bg-accent" value="desc">
             Sort Order
           </option>
           <option className="bg-accent" value="asc">
@@ -118,8 +120,8 @@ const Home = () => {
           </tr>
         </tbody>
         <tbody>
-          {bookData?.data?.data.map((book: any, index: number) => (
-            <tr>
+          {bookData?.data?.data.map((book, index) => (
+            <tr key={index}>
               <th>{index + 1}</th>
               <td>{book.title}</td>
               <td>{book.author}</td>
@@ -157,9 +159,10 @@ const Home = () => {
             setLimit(e.target.value);
             setPageNo(1);
           }}
+          defaultValue="10"
           className="select inline select-secondary select-xs w-14 max-w-xs mx-4"
         >
-          <option selected>5</option>
+          <option>5</option>
           <option>10</option>
           <option>15</option>
         </select>

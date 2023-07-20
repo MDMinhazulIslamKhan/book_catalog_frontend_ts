@@ -7,13 +7,9 @@ interface IProps {
 }
 
 export default function PrivateRoute({ children }: IProps) {
-  const { token, isLoading } = useAppSelector((state) => state.user);
+  const { token } = useAppSelector((state) => state.user);
 
   const { pathname } = useLocation();
-
-  if (isLoading) {
-    return <span className="loading loading-spinner text-primary"></span>;
-  }
 
   if (!token && !token) {
     return <Navigate to="/login" state={{ path: pathname }} />;

@@ -1,14 +1,15 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+interface IToken {
+  token: string | null;
+}
+const initialState: IToken = {
   token: localStorage.getItem("accessToken"),
 };
 const userSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    setToken: (state, action) => {
+    setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
     removeToken: (state) => {

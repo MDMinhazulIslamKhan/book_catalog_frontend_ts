@@ -1,38 +1,37 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { LoginInputData, RegistrationInputData } from "../../../types";
 import { api } from "../../api/apiSlice";
 
 const bookApi = api.injectEndpoints({
   endpoints: (build) => ({
     login: build.mutation({
-      query: (data) => ({
+      query: (data: LoginInputData) => ({
         url: `/auth/signin`,
         method: "POST",
         body: data,
       }),
     }),
     registration: build.mutation({
-      query: (data) => ({
+      query: (data: RegistrationInputData) => ({
         url: `/auth/signup`,
         method: "POST",
         body: data,
       }),
     }),
     addWishlist: build.mutation({
-      query: (id) => ({
+      query: (id: string) => ({
         url: `/user/add-book-into-wishlist/${id}`,
         method: "POST",
       }),
     }),
     addBooklist: build.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data }: { id: string; data: { status: string } }) => ({
         url: `/user/add-book-into-booklist/${id}`,
         method: "POST",
         body: data,
       }),
     }),
     updateBooklist: build.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data }: { id: string; data: { status: string } }) => ({
         url: `/user/update-booklist/${id}`,
         method: "PATCH",
         body: data,

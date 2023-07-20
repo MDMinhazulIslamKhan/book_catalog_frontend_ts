@@ -1,29 +1,32 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import {
   useGetGenreQuery,
   usePostBookMutation,
 } from "../redux/features/book/bookApi";
+import { BookInputData, IApiResponse } from "../types";
 
 const AddBook = () => {
   const navigate = useNavigate();
-  const { data } = useGetGenreQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-  const [genre, setGenre] = useState(null);
+  const { data }: { data?: IApiResponse<Array<{ genre: string }>> } =
+    useGetGenreQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
+  const [genre, setGenre] = useState("");
   const [postBook, options] = usePostBookMutation();
-  const { isSuccess, error } = options;
+  const { isSuccess } = options;
   if (isSuccess) {
     navigate("/");
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const title = e?.target?.title?.value;
-    const author = e?.target?.author?.value;
-    const publicationDate = e?.target?.publicationDate?.value;
-    const option = { title, author, genre, publicationDate };
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const form = event.target as HTMLFormElement;
+    event.preventDefault();
+    const title = form.bookTitle.value;
+    const author = form.author.value;
+    const publicationDate = form.publicationDate?.value;
 
+    const option: BookInputData = { title, author, genre, publicationDate };
     postBook(option);
   };
 
@@ -38,7 +41,7 @@ const AddBook = () => {
                 <span className="label-text">Title</span>
               </label>
               <input
-                name="title"
+                name="bookTitle"
                 autoComplete="off"
                 placeholder="Book Title"
                 required
@@ -66,11 +69,9 @@ const AddBook = () => {
                 className="select select-bordered w-full max-w-xs"
                 onChange={(e) => setGenre(e.target.value)}
               >
-                <option disabled selected>
-                  Select Genre
-                </option>
-                {data?.data?.map((genre) => (
-                  <option className="bg-accent" value={genre.genre}>
+                <option value="">Select Genre</option>
+                {data?.data?.map((genre, index) => (
+                  <option key={index} className="bg-accent" value={genre.genre}>
                     {genre.genre}
                   </option>
                 ))}

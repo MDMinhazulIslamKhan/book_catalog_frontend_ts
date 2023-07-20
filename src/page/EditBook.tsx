@@ -1,25 +1,22 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetGenreQuery,
   useSingleBookQuery,
   useUpdateBookMutation,
 } from "../redux/features/book/bookApi";
+import { BookInputData, IApiResponse } from "../types";
 
 const EditBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: previousData } = useSingleBookQuery(id, {
+  const { data: previousData } = useSingleBookQuery(id!, {
     refetchOnMountOrArgChange: true,
   });
-  const { data } = useGetGenreQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { data }: { data?: IApiResponse<Array<{ genre: string }>> } =
+    useGetGenreQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
   const [updateBook, options] = useUpdateBookMutation();
   const { isSuccess } = options;
 
@@ -40,9 +37,12 @@ const EditBook = () => {
     setPublicationDate(formattedDate);
   }, [previousData]);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    const option = { id, data: { title, author, genre, publicationDate } };
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const option: { id: string; data: BookInputData } = {
+      id: id!,
+      data: { title, author, genre, publicationDate },
+    };
     updateBook(option);
     isSuccess && navigate("/my-book");
   };
@@ -91,8 +91,8 @@ const EditBook = () => {
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
               >
-                {data?.data?.map((genre: any) => (
-                  <option className="bg-accent" value={genre.genre}>
+                {data?.data?.map((genre, index) => (
+                  <option key={index} className="bg-accent" value={genre.genre}>
                     {genre.genre}
                   </option>
                 ))}
